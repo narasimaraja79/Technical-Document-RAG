@@ -1,0 +1,33 @@
+
+venv/
+__pycache__/
+*.pyc
+.env
+.streamlit/secrets.toml
+
+data/uploads/
+vectorstore/
+
+.ipynb_checkpoints/
+```
+
+This prevents temporary files, uploaded PDFs and generated vector databases from unnecessarily entering GitHub.
+
+**Important:** Keep your sample documents in `data/documents/` only if the company permits you to submit them.
+
+## Step 4: Final project test
+
+Run:
+
+```powershell
+streamlit run app.py
+```
+
+Check these four features:
+
+- [ ] Upload two PDFs.
+- [ ] Select one PDF and ask a question.
+- [ ] Select All Documents and ask a question.
+- [ ] Check the source filename, page number and evidence.
+
+<badge color="success">Almost ready for submission</badge>
