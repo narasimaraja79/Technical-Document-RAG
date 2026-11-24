@@ -1,64 +1,56 @@
+# BEIR SciFact Evaluation Report
 
-# RAG System Evaluation Report
+## 1. Objective
 
-## 1. Project Overview
+The objective of this evaluation is to measure the document retrieval performance of the Technical Document Question Answering System using the BEIR SciFact benchmark dataset.
 
-The Technical Document Question Answering System uses
-Retrieval-Augmented Generation (RAG) to answer questions
-from multiple PDF documents.
+## 2. Dataset Details
 
-## 2. Technologies Used
+- Dataset: BEIR SciFact
+- Corpus documents: 5,183
+- Evaluated queries: 300
+- Embedding model: all-MiniLM-L6-v2
+- Embedding dimension: 384
+- Retrieval method: Dense vector retrieval using cosine similarity
+- Top-K: 10
 
-- Python
-- PyMuPDF
-- Sentence Transformers
-- all-MiniLM-L6-v2
-- FAISS Vector Database
-- Ollama
-- Qwen2.5 0.5B
-- Streamlit
+## 3. Evaluation Metrics
 
-## 3. Evaluation Test Cases
+The following metrics were used:
 
-| Test | Evaluation Type | Expected Result |
-|---|---|---|
-| 1 | Single PDF question | Relevant answer |
-| 2 | Second PDF question | Relevant answer |
-| 3 | Cross-document question | Information from both PDFs |
-| 4 | Document-specific search | Correct PDF source |
-| 5 | Out-of-document question | Refusal or no relevant information |
+| Metric | Result |
+|---|---:|
+| NDCG@10 | 0.6451 |
+| MAP@10 | 0.5959 |
+| Recall@10 | 0.7833 |
+| Precision@10 | 0.0883 |
+| MRR@10 | 0.6047 |
 
-## 4. Evaluation Observations
+## 4. Results and Observations
 
-- Multiple PDF uploads are supported.
-- PDF text is extracted using PyMuPDF.
-- Text is divided into chunks.
-- Sentence embeddings are generated.
-- FAISS retrieves relevant document chunks.
-- Ollama generates answers using retrieved context.
-- Source filenames and page numbers are displayed.
-- Document-specific retrieval is implemented.
-- A similarity threshold is used to filter distant results.
+- NDCG@10 of 0.6451 indicates the ranking of relevant documents has measurable effectiveness.
+- MAP@10 of 0.5959 measures the average precision across the evaluated queries.
+- Recall@10 of 0.7833 indicates that the retrieval system found a substantial proportion of relevant documents within the top 10 results.
+- Precision@10 of 0.0883 indicates that the average proportion of relevant documents among the 10 retrieved results was relatively low.
+- MRR@10 of 0.6047 measures how highly the first relevant result appeared in the rankings.
 
-## 5. Limitations
+## 5. Conclusion
 
-- Small language models may generate inaccurate answers.
-- Retrieval quality depends on chunking and embedding quality.
-- Similarity threshold requires further evaluation.
-- Complex questions involving multiple documents may need better retrieval.
+The all-MiniLM-L6-v2 embedding model demonstrated useful semantic retrieval performance on the BEIR SciFact dataset.
 
-## 6. Future Improvements
+The results show relatively strong recall, while precision can be improved through better ranking, filtering, and retrieval techniques.
 
-- Improve retrieval accuracy.
+This evaluation provides a quantitative baseline for improving the document retrieval component of the RAG system.
+
+## 6. Limitations
+
+- The evaluation measures document retrieval performance, not the factual correctness of generated answers.
+- The experiment uses the SciFact benchmark and does not establish performance on every type of technical document.
+- Further evaluation is needed to measure end-to-end answer quality, source accuracy, and hallucination resistance.
+
+## 7. Future Improvements
+
 - Experiment with different embedding models.
-- Add reranking.
-- Improve answer grounding.
-- Optimize vector database storage.
-- Add automated evaluation metrics.
-
-## 7. Conclusion
-
-The project demonstrates a multi-document RAG-based
-question-answering system using open-source technologies.
-It retrieves information from uploaded PDF documents
-and generates answers with source references.
+- Apply reranking to improve the relevance of retrieved documents.
+- Tune the retrieval threshold and top-K value.
+- Evaluate generated answers for factual accuracy and context relevance.

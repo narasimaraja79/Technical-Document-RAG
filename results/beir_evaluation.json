@@ -1,0 +1,11 @@
+{
+    "NDCG@10": 0.6451,
+    "MAP@10": 0.5959,
+    "Recall@10": 0.7833,
+    "Precision@10": 0.0883,
+    "MRR@10": 0.6047,
+    "Dataset": "BEIR SciFact",
+    "Evaluated Queries": 300,
+    "Corpus Documents": 5183,
+    "Embedding Model": "all-MiniLM-L6-v2"
+}

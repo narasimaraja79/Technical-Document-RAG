@@ -165,6 +165,29 @@ The system is tested using:
 Actual test results should be recorded in
 evaluation_report.md.
 
+### BEIR SciFact Benchmark Results
+
+The retrieval component was evaluated using the BEIR SciFact dataset.
+
+| Metric | Score |
+|---|---:|
+| NDCG@10 | 0.6451 |
+| MAP@10 | 0.5959 |
+| Recall@10 | 0.7833 |
+| Precision@10 | 0.0883 |
+| MRR@10 | 0.6047 |
+
+**Evaluation details:**
+- Dataset: BEIR SciFact
+- Corpus documents: 5,183
+- Evaluated queries: 300
+- Embedding model: all-MiniLM-L6-v2
+- Retrieval method: Dense vector retrieval using cosine similarity
+- Top-K: 10
+
+These results provide a baseline for measuring semantic document retrieval performance. They do not measure the factual accuracy of generated answers.
+
+
 ## 9. Limitations
 
 - Small language models can generate inaccurate answers.
@@ -190,3 +213,25 @@ Generation and open-source tools.
 It combines semantic search with LLM-based generation
 to answer questions from technical PDF documents
 while providing source references.
+
+## BEIR Benchmark Evaluation
+
+The retrieval component was evaluated using the BEIR SciFact dataset.
+
+| Metric | Score |
+|---|---:|
+| NDCG@10 | 0.6451 |
+| MAP@10 | 0.5959 |
+| Recall@10 | 0.7833 |
+| Precision@10 | 0.0883 |
+| MRR@10 | 0.6047 |
+
+**Evaluation details:**
+- Dataset: BEIR SciFact
+- Corpus documents: 5,183
+- Evaluated queries: 300
+- Embedding model: all-MiniLM-L6-v2
+- Retrieval method: Dense vector retrieval using cosine similarity
+- Top-K: 10
+
+The results provide a baseline for measuring semantic document retrieval performance. They do not measure the factual accuracy of generated answers.

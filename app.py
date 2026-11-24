@@ -4,9 +4,12 @@ import sys
 import os
 
 # Add src folder to Python path
-sys.path.append(os.path.join(os.path.dirname(__file__), "src"))
+sys.path.append(
+    os.path.join(os.path.dirname(__file__), "src")
+)
 
 from rag_pipeline import run_rag_pipeline
+
 
 # Page configuration
 st.set_page_config(
@@ -19,13 +22,14 @@ st.set_page_config(
 st.title("📚 Technical Document Question Answering System")
 st.write("Ask questions about your technical documents using RAG.")
 
-# Multiple PDF upload
+# PDF upload section
 st.subheader("📂 Upload Your PDF Documents")
 
 uploaded_files = st.file_uploader(
     "Choose PDF files",
     type=["pdf"],
-    accept_multiple_files=True
+    accept_multiple_files=True,
+    key="technical_pdf_uploader"
 )
 
 # Save uploaded PDFs
@@ -52,76 +56,6 @@ if uploaded_files:
 
     st.info(f"{len(pdf_paths)} PDF document(s) saved successfully!")
 
-# User question
-# Select document
-document_options = ["All Documents"] + [
-    os.path.basename(path) for path in pdf_paths
-]
-
-import streamlit as st
-import sys
-import os
-
-# Add src folder to Python path
-sys.path.append(
-    os.path.join(os.path.dirname(__file__), "src")
-)
-
-from rag_pipeline import run_rag_pipeline
-
-
-# Page configuration
-st.set_page_config(
-    page_title="Technical Document RAG",
-    page_icon="📚",
-    layout="wide"
-)
-
-
-# Application title
-st.title("📚 Technical Document Question Answering System")
-
-st.write(
-    "Ask questions about your technical documents using RAG."
-)
-
-
-# PDF upload section
-st.subheader("📂 Upload Your PDF Documents")
-
-uploaded_files = st.file_uploader(
-    "Choose PDF files",
-    type=["pdf"],
-    accept_multiple_files=True
-)
-
-
-# Save uploaded PDFs
-pdf_paths = []
-
-if uploaded_files:
-
-    os.makedirs("data/uploads", exist_ok=True)
-
-    for uploaded_file in uploaded_files:
-
-        st.success(f"Uploaded: {uploaded_file.name}")
-
-        pdf_path = os.path.join(
-            "data",
-            "uploads",
-            uploaded_file.name
-        )
-
-        with open(pdf_path, "wb") as f:
-            f.write(uploaded_file.getbuffer())
-
-        pdf_paths.append(pdf_path)
-
-    st.info(
-        f"{len(pdf_paths)} PDF document(s) saved successfully!"
-    )
-
 
 # Document selection
 document_options = ["All Documents"] + [
@@ -141,9 +75,7 @@ document_name = (
 
 
 # User question
-question = st.text_input(
-    "Enter your question:"
-)
+question = st.text_input("Enter your question:")
 
 
 # Ask button
@@ -155,7 +87,6 @@ if st.button("Ask"):
 
             try:
 
-                # Process uploaded documents
                 if pdf_paths:
 
                     answer, sources = run_rag_pipeline(
@@ -164,18 +95,15 @@ if st.button("Ask"):
                         document_name
                     )
 
-                # Process default document
                 else:
 
                     answer, sources = run_rag_pipeline(
                         question
                     )
 
-
-                # Display AI answer
+                # Display answer
                 st.subheader("🤖 AI Answer")
                 st.write(answer)
-
 
                 # Display source references
                 st.subheader("📄 Source References")
@@ -198,17 +126,13 @@ if st.button("Ask"):
                             ):
 
                                 st.write("Retrieved Evidence:")
-
                                 st.write(source["text"])
 
                             seen_sources.add(source_key)
 
                 else:
 
-                    st.info(
-                        "No source references found."
-                    )
-
+                    st.info("No source references found.")
 
             except Exception as e:
 
@@ -217,8 +141,3 @@ if st.button("Ask"):
     else:
 
         st.warning("Please enter a question.")
-
-
-
-
-         

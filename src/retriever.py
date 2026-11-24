@@ -13,32 +13,27 @@ def search_documents(
     query,
     index,
     chunks,
-    top_k=3,
+    top_k=5,
     document_name=None
 ):
-
     query_embedding = generate_embeddings([query])
-    query_embedding = np.array(query_embedding).astype("float32")
+    query_embedding = np.array(
+        query_embedding
+    ).astype("float32")
 
-    # Search all available vectors
+    # Search a limited number of nearest chunks
+    search_k = min(index.ntotal, 20)
+
     distances, indices = index.search(
         query_embedding,
-        index.ntotal
+        search_k
     )
-
-    print("Retrieval distances:", distances[0][:3])
 
     results = []
 
     for rank, i in enumerate(indices[0]):
 
         if i == -1:
-            continue
-
-        distance = distances[0][rank]
-
-        # Similarity threshold
-        if distance > 1.2:
             continue
 
         chunk = chunks[i]
@@ -50,11 +45,19 @@ def search_documents(
 
         results.append(chunk)
 
+        print(
+            f"Rank: {rank + 1}, "
+            f"Distance: {distances[0][rank]:.4f}, "
+            f"Document: {chunk['document_name']}, "
+            f"Page: {chunk['page_number']}"
+        )
+
         if len(results) >= top_k:
             break
 
     print("Retrieved documents:", len(results))
 
     return results
+
 
 

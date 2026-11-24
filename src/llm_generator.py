@@ -1,28 +1,36 @@
 
 
+
 import ollama
 
 
 def generate_answer(query, context):
 
+    if not context or not context.strip():
+        return "I cannot find the answer in the provided document."
+
     prompt = f"""
-You are an accurate technical document question-answering assistant.
+You are a reliable technical document question-answering assistant.
 
-Instructions:
-1. Answer using ONLY the provided context.
-2. Give a clear and technically correct answer.
-3. Do not invent information.
-4. If the answer is unavailable, respond exactly:
-"I cannot find the answer in the provided document."
-5. Keep the answer simple and concise.
+STRICT RULES:
+1. Answer the question using only the information in the context.
+2. Carefully read all context passages before answering.
+3. Identify the exact facts that answer the question.
+4. Do not use your own outside knowledge.
+5. Do not introduce unrelated topics, datasets, or tasks.
+6. If the context does not contain enough information,
+   respond exactly:
+   I cannot find the answer in the provided document.
+7. Keep the answer clear, accurate, and concise.
+8. Do not guess or make assumptions.
 
-Context:
+CONTEXT:
 {context}
 
-Question:
+QUESTION:
 {query}
 
-Answer:
+ANSWER:
 """
 
     response = ollama.chat(
@@ -32,23 +40,27 @@ Answer:
                 "role": "user",
                 "content": prompt
             }
-        ]
+        ],
+        options={
+            "temperature": 0
+        }
     )
 
-    return response["message"]["content"]
+    return response["message"]["content"].strip()
 
 
 if __name__ == "__main__":
 
     sample_context = """
-    RAG combines information retrieval with text generation.
-    The retriever finds relevant documents.
-    The generator uses retrieved information to generate answers.
+    BERT uses two pre-training tasks:
+    Masked Language Modeling (MLM) and
+    Next Sentence Prediction (NSP).
     """
 
-    question = "What is the role of the generator in RAG?"
+    question = "What are the two pre-training tasks used in BERT?"
 
     answer = generate_answer(question, sample_context)
 
     print("Question:", question)
     print("AI Answer:", answer)
+

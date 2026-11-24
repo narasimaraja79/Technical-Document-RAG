@@ -1,5 +1,4 @@
 
-
 import os
 import sys
 
@@ -16,37 +15,53 @@ def run_rag_pipeline(
     document_name=None
 ):
 
-    # Step 1: Select PDF documents
     if pdf_paths is None:
         pdf_paths = ["data/documents/rag_research.pdf"]
 
-    # Step 2: Build vector database
+    # Build vector database
     index, chunks = build_pdf_vector_store(pdf_paths)
 
-    # Step 3: Retrieve relevant chunks
+    # Retrieve relevant chunks
     results = search_documents(
         query,
         index,
         chunks,
-        top_k=3,
+        top_k=5,
         document_name=document_name
     )
 
     if not results:
-        return "No relevant information found in the selected document.", []
+        return (
+            "I cannot find the answer in the provided document.",
+            []
+        )
 
-    # Step 4: Prepare context
-    context = "\n\n".join(
-        [result["text"] for result in results]
-    )
+    # Prepare context with source information
+    context_parts = []
 
-    # Step 5: Generate answer
+    for result in results:
+        context_parts.append(
+            f"""
+Document: {result['document_name']}
+Page: {result['page_number']}
+Content:
+{result['text']}
+"""
+        )
+
+    context = "\n\n".join(context_parts)
+
+    # Debug: inspect actual retrieved context
+    print("\n========== RETRIEVED CONTEXT ==========")
+    print(context)
+    print("=======================================")
+
+    # Generate answer
     answer = generate_answer(query, context)
 
     print("\nUser Question:", query)
     print("\nAI Answer:", answer)
 
-    # Step 6: Return answer and sources
     return answer, results
 
 
@@ -63,6 +78,7 @@ if __name__ == "__main__":
             "Document:", source["document_name"],
             "| Page:", source["page_number"]
         )
+
 
 
 
